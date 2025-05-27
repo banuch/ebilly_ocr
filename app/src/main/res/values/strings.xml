@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Ebilly OCR</string>
+    <string name="capture_button_description">Take photo</string>
+    <string name="camera_permission_rationale">Camera permission is required to capture photos</string>
+    <string name="storage_permission_rationale">Storage permission is required to save photos</string>
+    <string name="error_camera_init">Could not initialize camera</string>
+    <string name="error_image_capture">Error capturing image</string>
+    <string name="success_image_capture">Image captured successfully</string>
+    <string name="take_photo">Take photo</string>
+    <string name="capture_photo">Capture Photo</string>
+    <string name="switch_camera">Switch Camera</string>
+    <string name="flash_mode">Flash Mode</string>
+    <string name="roi_selection">Region of Interest Selection</string>
+    <string name="_1_0x">1.0x</string>
+    <string name="tap_process">Tap \'Process\'</string>
+    <string name="captured_meter_image">Captured Meter Image</string>
+    <string name="enter_value">Enter Value</string>
+    <string name="meter_reader">Meter Reader</string>
+    <string name="zoom">Zoom:</string>
+    <string name="exposure">Exposure:</string>
+</resources>
