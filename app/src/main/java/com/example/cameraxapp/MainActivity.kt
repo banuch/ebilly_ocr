@@ -34,6 +34,7 @@ import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.provider.Settings
+import com.app.autocrop.DateUtils
 import kotlin.math.sqrt
 
 /**
@@ -112,13 +113,28 @@ class MainActivity : AppCompatActivity(), PermissionManager.PermissionListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        try {
-            initializeApp()
-        } catch (e: Exception) {
-            AppLogger.e("Failed to initialize app", e)
-            showError("Failed to initialize app: ${e.message}")
-            finish()
+// Define the allowed date range
+        val startDate = "2025-02-01" // Start date (YYYY-MM-DD)
+        val endDate = "2025-06-30"   // End date (YYYY-MM-DD)
+
+        Log.d(TAG, "Start date : $startDate")
+        Log.d(TAG, "End date : $endDate")
+
+        if (DateUtils.isWithinDateRange(startDate, endDate)) {
+            try {
+                initializeApp()
+            } catch (e: Exception) {
+                AppLogger.e("Failed to initialize app", e)
+                showError("Failed to initialize app: ${e.message}")
+                finish()
+            }
+            Log.d(TAG, "Date with in range")
+        } else {
+            titleTextView = findViewById(R.id.titleTextView)
+            titleTextView.setText("Actiation Exppired ${getVersionName()}")
+            Log.d(TAG, "Date not ok")
         }
+      
     }
 
     /**

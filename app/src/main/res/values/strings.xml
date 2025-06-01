@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Ebilly OCR</string>
+    <string name="app_name">AutoCrop</string>
     <string name="capture_button_description">Take photo</string>
     <string name="camera_permission_rationale">Camera permission is required to capture photos</string>
     <string name="storage_permission_rationale">Storage permission is required to save photos</string>
