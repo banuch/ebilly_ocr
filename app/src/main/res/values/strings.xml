@@ -18,4 +18,5 @@
     <string name="meter_reader">Meter Reader</string>
     <string name="zoom">Zoom:</string>
     <string name="exposure">Exposure:</string>
+    <string name="add_decimal_value">Add Decimal Value</string>
 </resources>

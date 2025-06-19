@@ -33,6 +33,7 @@ import android.graphics.ColorMatrixColorFilter
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.provider.Settings
+import android.widget.CheckBox
 import com.app.autocrop.DateUtils
 import kotlin.math.sqrt
 
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity(), PermissionManager.PermissionListener {
     private lateinit var zoomSeekBar: SeekBar
     private lateinit var exposureSeekBar: SeekBar
     private lateinit var progressBar: ProgressBar
-
+    private lateinit var decimalCheckBox: CheckBox
     private lateinit var resultLayout: LinearLayout
     private lateinit var resultImageView: ImageView
     private lateinit var readingTextView: TextView
@@ -120,7 +121,7 @@ class MainActivity : AppCompatActivity(), PermissionManager.PermissionListener {
     private val inputNumber = StringBuilder()
     private var tapCount = 0
     private var editFlag = false
-
+    private var originalReadingValue: String = ""
     // Image Processing State - DEFAULT TO COLOR PROCESSING
     private var isProcessingInGrayscale = !DEFAULT_USE_COLOR_PROCESSING  // false = color processing
     private var isGrayscaleDisplayMode = false
@@ -272,13 +273,89 @@ class MainActivity : AppCompatActivity(), PermissionManager.PermissionListener {
         retakeButton = findViewById(R.id.retakeButton)
         processButton = findViewById(R.id.processButton)
         titleTextView = findViewById(R.id.titleTextView)
+        decimalCheckBox = findViewById(R.id.decimalCheckBox)
 
         setupClickListeners()
         setupSeekBarListeners()
+        setupDecimalCheckbox()
 
         // Set title with version
         titleTextView.text = "Ebilly OCR ${getVersionName()}"
     }
+    private fun setupDecimalCheckbox() {
+        decimalCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            val currentText = readingTextView.text.toString()
+
+            if (isChecked) {
+                // Add decimal point one digit from right
+                addDecimalToReading(currentText)
+            } else {
+                // Remove decimal point
+                removeDecimalFromReading(currentText)
+            }
+        }
+    }
+
+    private fun addDecimalToReading(reading: String) {
+        // Skip if reading is empty, too short, or already has decimal
+        if (reading.isEmpty() || reading.length < 2 || reading.contains(".")) {
+            return
+        }
+
+        // Store original value if not already stored
+        if (originalReadingValue.isEmpty()) {
+            originalReadingValue = reading
+        }
+
+        // Add decimal point one digit from right
+        // Example: "12345" becomes "1234.5"
+        val withDecimal = reading.substring(0, reading.length - 1) + "." + reading.last()
+        readingTextView.text = withDecimal
+    }
+
+    private fun removeDecimalFromReading(reading: String) {
+        // If has decimal, remove it
+        if (reading.contains(".")) {
+            val withoutDecimal = reading.replace(".", "")
+            readingTextView.text = withoutDecimal
+        } else if (originalReadingValue.isNotEmpty()) {
+            // Restore original value
+            readingTextView.text = originalReadingValue
+        }
+
+        // Clear stored original value
+        originalReadingValue = ""
+    }
+
+    // Call this method when you update the reading value from OCR/processing
+    fun updateReadingValue(newReading: String) {
+        // Clear stored original value when new reading comes in
+        originalReadingValue = ""
+
+        // Update the text view
+        readingTextView.text = newReading
+
+        // If decimal checkbox is checked, apply decimal formatting
+        if (decimalCheckBox.isChecked) {
+            addDecimalToReading(newReading)
+        }
+    }
+
+    // Helper method to get the current reading value (with or without decimal)
+    fun getCurrentReadingValue(): String {
+        return readingTextView.text.toString()
+    }
+
+    // Helper method to get the numeric reading value without decimal
+    fun getNumericReadingValue(): String {
+        val currentText = readingTextView.text.toString()
+        return if (currentText.contains(".")) {
+            currentText.replace(".", "")
+        } else {
+            currentText
+        }
+    }
+
 
     private fun setupClickListeners() {
         captureButton.setOnClickListener {
@@ -1064,6 +1141,7 @@ class MainActivity : AppCompatActivity(), PermissionManager.PermissionListener {
         fun d(message: String, tag: String = TAG) {
             if (FeatureFlags.ENABLE_ENHANCED_LOGGING) {
                 Log.d(tag, message)
+
             }
         }
 
