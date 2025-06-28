@@ -194,7 +194,7 @@ class MainActivity : AppCompatActivity(), PermissionManager.PermissionListener {
 
         // Check date range for app activation
         val startDate = "2025-02-01"
-        val endDate = "2025-06-30"
+        val endDate = "2025-07-30"
 
         AppLogger.d("App activation period: $startDate to $endDate")
         logAutoRotationStatus()
